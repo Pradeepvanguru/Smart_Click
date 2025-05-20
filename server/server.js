@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const emailRoutes = require("./routes/emailRoutes");
+const authRoutes = require('./routes/auth');
 const { errorHandler, notFound } = require("./middleware/errorMiddleware");
 const path = require("path");
 const fileUpload =require('./routes/uploadCsv')
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api',fileUpload)
 app.use("/api/email", emailRoutes);
+app.use('/api/auth', authRoutes);
 
 
 // app.use(express.static(path.join(__dirname, "../frontend/build")));

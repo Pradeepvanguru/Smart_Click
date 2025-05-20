@@ -4,26 +4,41 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const path = require("path");
 const multer = require("multer");
+const Authentication =require('../middleware/AuthMiddleWare')
 
 let isCancelled = false;
 
-// Multer setup for file uploads
+// Use 'fs' for mkdirSync and existsSync
+const uploadPath = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+    const userEmail = req.userEmail || 'unknown_user'; // Fallback if not available
+    const sanitizedEmail = userEmail.replace(/[@.]/g, '_'); // Avoid invalid filename characters
+    const timestamp = Date.now();
+    const originalName = file.originalname;
+
+    const fileName = `${sanitizedEmail}_${timestamp}-${originalName}`;
+    cb(null, fileName);
+  }
 });
-const upload = multer({ storage }).single("resume");
+
+const upload = multer({ storage }).single('resume');
 
 
 
 const sendEmails = (req, res) => {
   upload(req, res, async function (err) {
-    // console.log("🔍 BODY:", req.body);
-    // console.log("📁 FILE:", req.file);
+    if (isCancelled) {
+      console.log("⛔ Process cancelled by user");
+      return;
+    }
 
     if (err) {
       console.error("Multer Error:", err);
@@ -61,7 +76,7 @@ const sendEmails = (req, res) => {
 
       // Start email sending
       isCancelled = false;
-      const estimatedTime = data.length * 2;
+      const estimatedTime = data.length * 3;
       res.json({ message: "Email sending started", estimatedTime });
 
       const transporter = nodemailer.createTransport({
@@ -131,24 +146,26 @@ const getDynamicKeys = (req, res) => {
     return res.status(404).json({ message: "Uploads folder does not exist." });
   }
 
-  // Extract the filename part from collectionName
+  // Extract email from collection name
   const match = collectionName.match(/^collection_(.+)_\d+$/);
   if (!match || !match[1]) {
     return res.status(400).json({ message: "Invalid collectionName format" });
   }
 
-  const baseName = match[1]; // e.g., "HR_contacts_sample-1"
+  const userEmail = match[1]; // e.g., vangurupradeep123@gmail.com
+  const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
 
+  // Find all matching CSV files
   const files = fs.readdirSync(uploadsDir)
-    .filter(f => f.endsWith(".csv") && f.includes(baseName))
+    .filter(f => f.endsWith(".csv") && f.startsWith(sanitizedEmail))
     .map(f => ({
       name: f,
       time: fs.statSync(path.join(uploadsDir, f)).mtime.getTime()
     }))
-    .sort((a, b) => b.time - a.time);
+    .sort((a, b) => b.time - a.time); // Most recent first
 
   if (files.length === 0) {
-    return res.status(404).json({ message: `No CSV files found for collection: ${collectionName}` });
+    return res.status(404).json({ message: `No CSV files found for user: ${userEmail}` });
   }
 
   const latestFile = path.join(uploadsDir, files[0].name);
@@ -163,6 +180,7 @@ const getDynamicKeys = (req, res) => {
       res.status(500).json({ message: "Error reading CSV file." });
     });
 };
+
 
 
 

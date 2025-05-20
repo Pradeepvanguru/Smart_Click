@@ -6,6 +6,9 @@
   background: linear-gradient(-360deg, #e7ffa452 0%, #5388dd52 60%, #e98a0528);
 }
 
+.welcome-container::-webkit-scrollbar-track{
+  display: none;
+}
 
 .loading-overlay{
   position: fixed;
@@ -19,6 +22,9 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+.loading-overlay::-webkit-scrollbar{
+  display: none;
 }
 
 .spinner{
@@ -39,12 +45,15 @@
 
 .main-content {
   flex: 1;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   text-align: center;
   padding: 0 1rem;
 }
 
+.main-content::-webkit-scrollbar-thumb{
+  display: none;
+}
 .welcome-title {
   font-size: 2rem;
   color: #2c3e50;
@@ -61,13 +70,13 @@
 }
 
 .action-button, .file-upload-button{
-  padding: 0.5rem 1rem;
+  padding: 1.2rem 1.2rem;
   font-size: 0.8rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  background-color: #3498db;
+  background-color: #398304fa;
   color: white;
   text-transform: uppercase;
   font-weight: bold;
@@ -86,6 +95,7 @@
   background-color: #bdc3c7;
   cursor: not-allowed;
   opacity: 0.7;
+  height: auto;
 }
 
 .action-button.disabled{
@@ -111,6 +121,7 @@
 .instructions-container h3 {
   color: #2c3e50;
   margin-bottom: 1rem;
+  font-size: 1.4rem;
 }
 
 .instructions-container ol {
@@ -203,7 +214,7 @@
 }
 
 .delete-button:hover {
-  background-color: #c0392b;
+  background-color: #c03a2bb4;
   transform: scale(1.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
@@ -214,8 +225,8 @@
 
 @media screen and (max-width: 480px){
   .delete-button {
-    width: 35px;
-    height: 35px;
+    width: 25px;
+    height: 25px;
   }
 }
 
@@ -235,7 +246,7 @@
   }
 
   .welcome-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .action-button, .file-upload-button {
