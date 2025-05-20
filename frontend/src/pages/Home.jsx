@@ -1,3 +1,4 @@
+import { BiLogOut } from "react-icons/bi"; 
 import { GiSteamBlast } from "react-icons/gi"; 
 import React,{useEffect,useState} from "react";
 import EmailForm from "../components/EmailForm";
@@ -84,7 +85,7 @@ const Home = () => {
             className="btn btn-link text-danger text-decoration-none px-2 my-1"
             style={{ fontSize: '14px' }}
           >
-            Logout
+            <BiLogOut /> Logout
           </button>
         </div>
       )}

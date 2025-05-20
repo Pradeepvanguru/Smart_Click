@@ -1,3 +1,7 @@
+import { SiPersonio } from "react-icons/si"; 
+import { BsPersonHearts } from "react-icons/bs"; 
+import { BiLogOut } from "react-icons/bi"; 
+import { RiDeleteBin7Line } from "react-icons/ri"; 
 import { GiPartyPopper } from "react-icons/gi"; 
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
 import { GoZap } from "react-icons/go";
@@ -115,7 +119,8 @@ const Welcome = () => {
           const response = await fetch(`${process.env.REACT_APP_URI}/api/upload-csv`, {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${token}`
+              'Authorization': `Bearer ${token}`,
+              
             },
             body: formData,
           });
@@ -151,16 +156,48 @@ const Welcome = () => {
   };
 
   const handleLogout = () => {
-    const Collectionname = sessionStorage.getItem('collectionName');
-    if(Collectionname){
-    handleDeleteData ()
-  }
+  //   const Collectionname = sessionStorage.getItem('collectionName');
+  //   if(Collectionname){
+  //   handleDeleteData ()
+  // }
     setUserName('');
     toast.success('Logged out successfully');
     sessionStorage.clear();
     navigate('/');
 
   };
+
+  const handleDeleteAccount = async () => {
+  const token = sessionStorage.getItem('token');
+
+  setLoading(true);
+  try {
+    // Wait for handleDeleteData to complete before deleting account
+    await handleDeleteData(); 
+
+    const response = await fetch(`${process.env.REACT_APP_URI}/api/auth/delete-account`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      toast.success('Account deleted successfully!');
+      sessionStorage.clear();
+      navigate('/');
+    } else {
+      toast.error(result.message || 'Failed to delete account');
+    }
+  } catch (error) {
+    toast.error('Error deleting account');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="welcome-container">
@@ -175,11 +212,11 @@ const Welcome = () => {
         <div className="container-fluid">
           <div className="navbar-brand d-flex align-items-center">
             <SiProcessingfoundation fontSize={50} color="grey" />
-            <span className="ms-2 text-secondary">Smart Click</span>
+            <span className="ms-2 text-secondary">Smart Click <SiPersonio   color='blue'/></span>
           </div>
           <div className="d-flex gap-2 justify-content-evenly align-items-center position-relative">
   {sessionStorage.getItem('token') && userName ? (
-    <>
+    <><BsPersonHearts fontSize={40} color="blue" />
       <div
         className="profile-circle d-flex align-items-center justify-content-center rounded-circle bg-primary text-white"
         style={{
@@ -211,10 +248,18 @@ const Welcome = () => {
         >
           <button
             onClick={handleLogout}
-            className="btn btn-link text-danger text-decoration-none p-0"
+            className="btn btn-link text-danger text-decoration-none p-2"
             style={{ fontSize: '14px' }}
           >
-            Logout
+            <BiLogOut /> Logout
+          </button><br></br>
+
+          <button
+            onClick={handleDeleteAccount}
+            className="btn btn-link text-danger text-decoration-none p-2 border-top "
+            style={{ fontSize: '14px' }}
+          >
+             <RiDeleteBin7Line /> Profile
           </button>
         </div>
       )}

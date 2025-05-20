@@ -6,7 +6,7 @@ const path = require("path");
 const multer = require("multer");
 const Authentication =require('../middleware/AuthMiddleWare')
 
-let isCancelled = false;
+
 
 // Use 'fs' for mkdirSync and existsSync
 const uploadPath = path.join(__dirname, '../uploads');
@@ -34,6 +34,7 @@ const upload = multer({ storage }).single('resume');
 
 
 const sendEmails = (req, res) => {
+   isCancelled = false;
   upload(req, res, async function (err) {
     if (isCancelled) {
       console.log("⛔ Process cancelled by user");
@@ -51,14 +52,12 @@ const sendEmails = (req, res) => {
       return res.status(400).json({ message: "Subject, template, file, and collectionName are required" });
     }
 
-    // Check file extension - resume must be PDF
     const extension = path.extname(req.file.originalname).toLowerCase();
     if (extension !== ".pdf") {
       return res.status(400).json({ message: "Only PDF files are supported as resume" });
     }
 
     try {
-      // Dynamically get or create model for the given collectionName
       let DynamicModel;
       if (mongoose.models[collectionName]) {
         DynamicModel = mongoose.model(collectionName);
@@ -67,17 +66,16 @@ const sendEmails = (req, res) => {
         DynamicModel = mongoose.model(collectionName, genericSchema, collectionName);
       }
 
-      // Fetch all documents from the dynamic collection
       const data = await DynamicModel.find({}).lean();
+     
 
       if (data.length === 0) {
-        return res.status(400).json({ message: "No data found in the collection" });
+        return res.status(400).json({ message: "No data found in the collection"}) 
       }
 
-      // Start email sending
-      isCancelled = false;
-      const estimatedTime = data.length * 3;
-      res.json({ message: "Email sending started", estimatedTime });
+       if(data){
+        return res.status(200).json({ estimatedTime:data.length * 10 });
+      }
 
       const transporter = nodemailer.createTransport({
         service: "Gmail",
@@ -90,12 +88,13 @@ const sendEmails = (req, res) => {
       const filePath = path.join(__dirname, "../uploads", req.file.filename);
 
       for (const hr of data) {
+        
         if (isCancelled) {
           console.log("⛔ Process cancelled by user");
-          return;
+
+          return res.status(200).json({ message: "Email sending cancelled" });
         }
 
-        // Replace placeholders in template with actual data values
         const personalizedTemplate = template.replace(/\[([^\]]+)\]/g, (_, key) => hr[key.trim()] || "");
 
         const mailOptions = {
@@ -113,19 +112,17 @@ const sendEmails = (req, res) => {
           console.error(`❌ Failed to send email to ${hr.email}`, emailErr);
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // wait 2 seconds between emails
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 sec wait
       }
 
       console.log("✅ All emails sent.");
+      return res.status(200).json({ message: "All emails sent successfully"}); // 2s per email
     } catch (err) {
-      console.error("Error fetching data or sending emails:", err);
-      return res.status(500).json({ message: "Internal error", error: err.message });
+      console.error("Error:", err);
+      res.status(500).json({ message: "Internal error", error: err.message });
     }
   });
 };
-
-
-
 
 
 

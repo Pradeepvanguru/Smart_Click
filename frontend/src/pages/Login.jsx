@@ -32,11 +32,13 @@ function Login() {
       if (result.collectionName) {
         sessionStorage.setItem('collectionName', result.collectionName);
       }
+
      toast.success('Login successful 🎉');
       navigate('/'); // Redirect to dashboard or home page
       // Redirect or show success
     } else {
       console.error('Login failed:', result.msg);
+      toast.info(result.msg);
     }
   } catch (err) {
       toast.info(err.response.data.msg);

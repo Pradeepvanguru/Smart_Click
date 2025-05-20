@@ -7,12 +7,11 @@ import { jwtDecode } from "jwt-decode";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { IoMdArrowBack } from "react-icons/io";
 
-import "./EmailForm.css"; // Custom styles
+import "./EmailForm.css";
 
 const EmailForm = () => {
   const [subject, setSubject] = useState("");
-  const [template, setTemplate] = useState(`
-    <html>
+  const [template, setTemplate] = useState(` <html>
     <body style="font-family: Arial, sans-serif; font-size: 10px; line-height: 1.5; color:grey;">
       <center><i><u>Example Email Template:</u></i></center>
       <p>Dear <strong>[HR name]</strong>,</p>
@@ -26,12 +25,11 @@ const EmailForm = () => {
         [email address]<br>
         [phone number]
       </p>
-    </body></html>
-  `);
+    </body></html>`);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(null);
   const [showOverlay, setShowOverlay] = useState(false);
   const [email, setEmail] = useState("");
   const [keys, setKeys] = useState([]);
@@ -40,13 +38,11 @@ const EmailForm = () => {
   const progressIntervalRef = useRef(null);
   const countdownIntervalRef = useRef(null);
   const editorInstance = useRef(null);
-
   const collectionName = sessionStorage.getItem("collectionName");
 
-  // Fetch token, decode email, get dynamic placeholders
   useEffect(() => {
     if (!collectionName) {
-      toast.error("Collection name not found in local storage");
+      toast.error("Collection name not found in session storage.");
       return;
     }
 
@@ -56,24 +52,25 @@ const EmailForm = () => {
       setEmail(decoded.email);
     }
 
-    fetch(`${process.env.REACT_APP_URI}/api/email/keys?collectionName=${collectionName}`,{
+    fetch(`${process.env.REACT_APP_URI}/api/email/keys?collectionName=${collectionName}`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((data) => setKeys(data.keys || []))
       .catch((err) => console.error("Error fetching keys:", err));
   }, [collectionName]);
 
-  // Cleanup intervals on unmount
   useEffect(() => {
-    return () => {
+    if (timer === 0 && loading) {
       clearInterval(progressIntervalRef.current);
       clearInterval(countdownIntervalRef.current);
-    };
-  }, []);
+      setLoading(false);
+      setShowOverlay(false);
+     
+      
+    }
+  }, [timer, loading]);
 
   const handleUpload = (e) => {
     setFile(e.target.files[0]);
@@ -81,20 +78,15 @@ const EmailForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const token = sessionStorage.getItem("token");
-    if (!token) {
-      toast.error("Please login to send emails.");
-      return;
-    }
-    if (!file) {
-      toast.warning("Please upload a resume file before sending.");
-      return;
-    }
+    if (!token) return toast.error("Please login first.");
+    if (!file) return toast.warning("Please upload a resume file.");
 
     setLoading(true);
     setShowOverlay(true);
     setProgress(0);
-    setTimer(30);
+   
 
     const formData = new FormData();
     formData.append("email", email);
@@ -104,31 +96,30 @@ const EmailForm = () => {
     formData.append("collectionName", collectionName);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_URI}/api/email/send`, {
+      const res = await fetch(`${process.env.REACT_APP_URI}/api/email/send`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
-      const data = await response.json();
-      const estTime = data.estimatedTime || 30;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Email sending failed.");
+
+      const estTime = parseInt(data.estimatedTime); // in seconds
       setTimer(estTime);
 
+      // Start Progress Bar
       progressIntervalRef.current = setInterval(() => {
         setProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(progressIntervalRef.current);
-            return 100;
-          }
-          return prev + 100 / estTime;
+          const newProgress = prev + (100 / estTime);
+          return newProgress >= 100 ? 100 : newProgress;
         });
       }, 1000);
 
+      // Start Countdown
       countdownIntervalRef.current = setInterval(() => {
         setTimer((prev) => {
-          if (prev <= 0) {
+          if (prev <= 1) {
             clearInterval(countdownIntervalRef.current);
             return 0;
           }
@@ -136,18 +127,13 @@ const EmailForm = () => {
         });
       }, 1000);
 
-      await new Promise((resolve) => setTimeout(resolve, estTime * 1000));
-
-      toast.success("Emails sent successfully!");
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to send emails. Please try again.");
-    } finally {
+      toast.success(data.message);
+      navigate("/home");
+ 
+    } catch (err) {
+      toast.error(err.message || "Failed to send.");
       setLoading(false);
       setShowOverlay(false);
-      clearInterval(progressIntervalRef.current);
-      clearInterval(countdownIntervalRef.current);
     }
   };
 
@@ -157,10 +143,11 @@ const EmailForm = () => {
     setLoading(false);
     setShowOverlay(false);
     setProgress(0);
-    setTimer(30);
+    setTimer(0);
 
     clearInterval(progressIntervalRef.current);
     clearInterval(countdownIntervalRef.current);
+    navigate("/home");
   };
 
   const handleKeyInsert = (key) => {
@@ -192,7 +179,7 @@ const EmailForm = () => {
             <label>From:</label>
             <input
               type="email"
-              value={email || ""}
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
@@ -213,7 +200,7 @@ const EmailForm = () => {
 
         <div>
           <label>Use Placeholders:</label>
-          <i style={{ float: 'right', fontSize: '10px', color: 'grey' }}>
+          <i style={{ float: "right", fontSize: "10px", color: "grey" }}>
             <b>Note:</b> Case-sensitive. Use [ ] brackets if typed manually.
           </i>
           <div className="placeholders">
@@ -268,7 +255,7 @@ const EmailForm = () => {
               />
             </div>
             <p>{Math.floor(progress)}% Completed</p>
-            <p>Estimated Time: {timer} sec</p>
+            <p>Estimated Time Remaining: {timer} sec</p>
             <button className="email_form_cancel_button" onClick={handleCancel}>
               Cancel
             </button>

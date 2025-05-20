@@ -128,46 +128,41 @@
   animation: spin 1s linear infinite;
 }
 
-/* Overlay styles */
-.email_form_overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  animation: fadeIn 0.3s ease-in;
-}
-
-.email_form_overlay_content {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  animation: slideUp 0.4s ease-in-out;
-}
-
-/* Progress bar container */
 .email_form_progress_bar_container {
   width: 100%;
+  height: 15px;
   background-color: #ddd;
-  border-radius: 20px;
-  margin: 20px 0;
-  height: 20px;
+  border-radius: 10px;
+  margin-top: 10px;
   overflow: hidden;
 }
 
 .email_form_progress_bar {
   height: 100%;
-  background-color: #007bff;
-  transition: width 1s linear;
+  background-color: #4caf50;
+  transition: width 0.5s;
 }
+
+.email_form_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.email_form_overlay_content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
 
 /* Cancel button */
 .email_form_cancel_button {

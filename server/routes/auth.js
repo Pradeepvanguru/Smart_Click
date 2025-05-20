@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { MongoClient } = require('mongodb');
+const Authentication = require('../middleware/AuthMiddleWare');
 
 // MongoDB setup
 const uri = process.env.MONGO_URI;
@@ -63,6 +64,26 @@ router.post('/login', async (req, res) => {
     console.error('Login error:', err);
     res.status(500).json({ msg: 'Server error' });
   }
+});
+
+router.delete('/delete-account', Authentication, (req, res) => {
+  const email = req.userEmail; // Safely access the email
+
+  if (!email) {
+    return res.status(400).json({ msg: 'Email is required' });
+  }
+
+  User.findOneAndDelete({ email })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+      res.json({ msg: 'User deleted successfully' });
+    })
+    .catch((err) => {
+      console.error('Delete error:', err);
+      res.status(500).json({ msg: 'Server error' });
+    });
 });
 
 
