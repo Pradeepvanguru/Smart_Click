@@ -43,7 +43,11 @@ const Home = () => {
   {/* Logo Section */}
   <div className="d-flex align-items-center" style={{ cursor: "pointer" }} onClick={handleBack}>
     <SiProcessingfoundation fontSize={50} color="grey" />
+<<<<<<< HEAD
     <span className="ms-2 text-secondary  fw-semibold">NEXTGEN JOB PORTAL </span>
+=======
+    <span className="ms-2 text-secondary  fw-semibold">Smart Click</span>
+>>>>>>> 646642111932e87d2d253d391f23d9f58cafc653
   </div>
 
   {/* Profile or Auth Buttons */}

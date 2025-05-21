@@ -338,9 +338,15 @@
     padding: 0 5px !important;
   }
   
+<<<<<<< HEAD
   /* .ck.ck-toolbar .ck-toolbar__items {
     flex-wrap: wrap;
   } */
+=======
+  .ck.ck-toolbar .ck-toolbar__items {
+    flex-wrap: wrap;
+  }
+>>>>>>> 646642111932e87d2d253d391f23d9f58cafc653
   
   .ck.ck-toolbar .ck-toolbar__items > * {
     margin: 5px 2px !important;
