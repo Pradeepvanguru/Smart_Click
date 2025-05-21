@@ -85,7 +85,7 @@ const sendEmails = (req, res) => {
       let emailsSent = 0;
       const totalEmails = data.length;
       // Send initial response with estimated time
-      res.status(200).json({ estimatedTime: totalEmails * 6, totalEmails: totalEmails,emailsent:emailsSent });
+      res.status(200).json({ estimatedTime: totalEmails * 2, totalEmails: totalEmails,emailsent:emailsSent });
 
       // Continue with email sending process
       for (const hr of data) {

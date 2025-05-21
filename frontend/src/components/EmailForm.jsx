@@ -107,7 +107,7 @@ const EmailForm = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Email sending failed.");
 
-      const estTime = parseInt(data.estimatedTime); // in seconds
+      const estTime = parseInt(data.estimatedTime || 30); // in seconds
       setTotalEmails(data.totalEmails); // Set total emails from response
       setTimer(estTime);
       setEmailSent(data.emailSent)
@@ -238,7 +238,7 @@ const EmailForm = () => {
           config={{
             licenseKey: "",
             toolbar: [
-              "heading","|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList",
+              "removeFormat" ,"|","heading","|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList",
               "numberedList", "blockQuote", 
             ],
           }}

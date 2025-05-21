@@ -338,9 +338,9 @@
     padding: 0 5px !important;
   }
   
-  .ck.ck-toolbar .ck-toolbar__items {
+  /* .ck.ck-toolbar .ck-toolbar__items {
     flex-wrap: wrap;
-  }
+  } */
   
   .ck.ck-toolbar .ck-toolbar__items > * {
     margin: 5px 2px !important;
