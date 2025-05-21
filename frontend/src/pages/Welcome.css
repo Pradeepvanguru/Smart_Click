@@ -223,16 +223,11 @@
   transform: scale(0.95);
 }
 
-@media screen and (max-width: 480px){
-  .delete-button {
-    width: 25px;
-    height: 25px;
-  }
-}
+
 
 @media screen and (max-width: 320px){
-  .delete-button {
-    width: 30px;
+  .delete-button{
+    width: 40px;
     height: 30px;
   }
 }
@@ -242,7 +237,7 @@
 @media screen and (max-width: 768px){
 
   .welcome-container {
-    padding: 1rem;
+    padding: 10px;
   }
 
   .welcome-title {
@@ -250,8 +245,8 @@
   }
 
   .action-button, .file-upload-button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
+    padding: 1rem 1.5rem;
+    font-size: 0.8rem;
   }
 
   .instructions-container {
@@ -259,7 +254,7 @@
   }
 
   .instructions-container h3 {
-    font-size: 1.3rem;
+    font-size: 1rem;
   }
 
   .instructions-container li {
@@ -278,20 +273,48 @@
   .contact-info p {
     font-size: 0.9rem;
   }
+
+  .example-dataset {
+    padding: 0.8rem;
+  }
+  
+  .dataset-note {
+    font-size: 0.8rem;
+  }
 }
 
 @media screen and (max-width: 480px){
-  .welcome-title {
-    font-size: 1.8rem;
-  }
 
+  .welcome-container {
+    padding: 2px;
+  }
+  .welcome-title {
+    font-size: 1.2rem;
+    margin: 2px;
+  }
+  .welcome-container .p-2{
+    font-size: 10px;
+  }
+  .login-signup button {
+    font-size: 0.6rem;
+    font-weight: bold;
+  }
+  .navbar-brand span{
+    font-size: 0.9rem;
+  }
+  
   .buttons-container {
     gap: 1rem;
+
+  }
+  .delete-button{
+    width: 25px;
+    height: 25px;
   }
 
-  .action-button, .file-upload-button {
-    padding: 0.7rem 1.2rem;
-    font-size: 0.9rem;
+  .action-button, .file-upload-button{
+    padding: 0.7rem 1rem;
+    font-size: 0.7rem;
   }
 
   .instructions-container h3 {
@@ -299,7 +322,7 @@
   }
 
   .instructions-container li {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 
   .footer {
@@ -315,6 +338,9 @@
     gap: 1rem;
     font-size: 0.8rem;
   }
+  .delete-outline-danger {
+    width: 50px;
+  }
 }
 
 @media screen and (max-width: 320px) {
@@ -324,7 +350,7 @@
 
   .action-button, .file-upload-button {
     padding: 0.6rem 1rem;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
 }
 
@@ -356,12 +382,3 @@
   font-style: italic;
 }
 
-@media screen and (max-width: 768px) {
-  .example-dataset {
-    padding: 0.8rem;
-  }
-  
-  .dataset-note {
-    font-size: 0.8rem;
-  }
-}

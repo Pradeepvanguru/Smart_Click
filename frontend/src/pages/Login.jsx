@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -48,21 +47,47 @@ function Login() {
   };
 
   return (
-    <div className="container mt-5 col-md-4 shadow-lg p-4">
-      <center><h3>Login</h3></center>
+    <div className="container mt-5 col-sm-5 shadow-lg p-4" style={{
+      maxWidth: '100%',
+      margin: '20px auto',
+      padding: '15px',
+      borderRadius: '8px',
+      '@media (max-width: 480px)': {
+        margin: '3px',
+        padding: '5px'
+      }
+    }}>
+      <center>
+        <h3 style={{ 
+          fontSize: 'clamp(1.2rem, 3vw, 1.5rem)',
+          marginBottom: '1rem'
+        }}>Login</h3>
+      </center>
+      
       <form onSubmit={handleSubmit}>
-        <div className="mb-3 p-2">
-          <label>Email</label>
+        <div className="mb-2 p-2">
+          <label style={{ 
+            fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+            marginBottom: '0.25rem'
+          }}>Email</label>
           <input 
             className="form-control" 
             name="email" 
             type="email" 
             onChange={handleChange} 
             required 
+            style={{
+              fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+              padding: '6px 10px',
+              height: '38px'
+            }}
           />
         </div>
-        <div className="mb-3 p-2">
-          <label>Password</label>
+        <div className="mb-2 p-2">
+          <label style={{ 
+            fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+            marginBottom: '0.25rem'
+          }}>Password</label>
           <div className="input-group">
             <input 
               className="form-control" 
@@ -70,17 +95,36 @@ function Login() {
               type={showPassword ? "text" : "password"} 
               onChange={handleChange} 
               required 
+              style={{
+                fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+                padding: '6px 10px',
+                height: '38px'
+              }}
             />
             <button 
               type="button" 
               className="btn shadow-lg" 
               onClick={() => setShowPassword(!showPassword)}
+              style={{
+                padding: '6px 10px',
+                fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+                height: '38px'
+              }}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
-        <button className="btn btn-success w-100" disabled={loading}>
+        <button 
+          className="btn btn-success w-100" 
+          disabled={loading}
+          style={{
+            fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+            padding: '8px',
+            height: '38px',
+            marginTop: '0.5rem'
+          }}
+        >
           {loading ? (
             <div className="spinner-border spinner-border-sm me-2" role="status">
               <span className="visually-hidden">Loading...</span>
@@ -89,11 +133,15 @@ function Login() {
           {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      <p className="text-center mt-4">
+      <p className="text-center mt-3" style={{ 
+        fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+        margin: '0.5rem 0'
+      }}>
         Don't have an account?{' '}
         <button
           onClick={() => navigate('/signup')}
           className="btn btn-link p-0 text-decoration-none"
+          style={{ fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)' }}
         >
           Sign up
         </button>

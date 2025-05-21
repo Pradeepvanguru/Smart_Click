@@ -33,7 +33,8 @@ const EmailForm = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const [email, setEmail] = useState("");
   const [keys, setKeys] = useState([]);
-
+  const [totalEmails, setTotalEmails] = useState(0);
+  const [emailSent, setEmailSent] = useState(0);
   const navigate = useNavigate();
   const progressIntervalRef = useRef(null);
   const countdownIntervalRef = useRef(null);
@@ -62,15 +63,17 @@ const EmailForm = () => {
   }, [collectionName]);
 
   useEffect(() => {
+    
     if (timer === 0 && loading) {
       clearInterval(progressIntervalRef.current);
       clearInterval(countdownIntervalRef.current);
       setLoading(false);
       setShowOverlay(false);
-     
+     toast.success({message:'Successfully Sent ✅'})
+     navigate('/success');
       
     }
-  }, [timer, loading]);
+  }, [timer, loading,navigate]);
 
   const handleUpload = (e) => {
     setFile(e.target.files[0]);
@@ -86,7 +89,6 @@ const EmailForm = () => {
     setLoading(true);
     setShowOverlay(true);
     setProgress(0);
-   
 
     const formData = new FormData();
     formData.append("email", email);
@@ -106,7 +108,9 @@ const EmailForm = () => {
       if (!res.ok) throw new Error(data.message || "Email sending failed.");
 
       const estTime = parseInt(data.estimatedTime); // in seconds
+      setTotalEmails(data.totalEmails); // Set total emails from response
       setTimer(estTime);
+      setEmailSent(data.emailSent)
 
       // Start Progress Bar
       progressIntervalRef.current = setInterval(() => {
@@ -200,9 +204,7 @@ const EmailForm = () => {
 
         <div>
           <label>Use Placeholders:</label>
-          <i style={{ float: "right", fontSize: "10px", color: "grey" }}>
-            <b>Note:</b> Case-sensitive. Use [ ] brackets if typed manually.
-          </i>
+          
           <div className="placeholders">
             {keys.map((key) => (
               <span key={key} className="placeholder-item" onClick={() => handleKeyInsert(key)}>
@@ -210,6 +212,9 @@ const EmailForm = () => {
               </span>
             ))}
           </div>
+          <i style={{ float: "right", fontSize: "10px", color: "grey" }}>
+            <b>Note:</b>Case Sensitive and Use [ ] brackets if typed manually.
+          </i>
         </div>
 
         <CKEditor
@@ -219,14 +224,22 @@ const EmailForm = () => {
             editorInstance.current = editor;
             editor.editing.view.change((writer) => {
               writer.setAttribute("data-placeholder", "Compose your email...", editor.editing.view.document.getRoot());
+              
+              // Add custom styles for mobile compatibility
+              const viewRoot = editor.editing.view.document.getRoot();
+              writer.setStyle({
+                'font-size': 'clamp(12px, 2vw, 14px)',
+                'line-height': '1.5',
+                'padding': '8px'
+              }, viewRoot);
             });
           }}
           onChange={(event, editor) => setTemplate(editor.getData())}
           config={{
             licenseKey: "",
             toolbar: [
-              "heading", "|", "bold", "italic", "link", "bulletedList",
-              "numberedList", "blockQuote", "|", "undo", "redo"
+              "heading","|", "undo", "redo", "|", "bold", "italic", "link", "bulletedList",
+              "numberedList", "blockQuote", 
             ],
           }}
         />
@@ -255,6 +268,9 @@ const EmailForm = () => {
               />
             </div>
             <p>{Math.floor(progress)}% Completed</p>
+            {totalEmails > 0 && (
+              <p>Email {Math.ceil((progress / 100) * totalEmails)} of {emailSent} sent</p>
+            )}
             <p>Estimated Time Remaining: {timer} sec</p>
             <button className="email_form_cancel_button" onClick={handleCancel}>
               Cancel
