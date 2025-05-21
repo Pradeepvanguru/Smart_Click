@@ -212,7 +212,7 @@ const Welcome = () => {
         <div className="container-fluid">
           <div className="navbar-brand d-flex align-items-center">
             <SiProcessingfoundation fontSize={50} color="grey" />
-            <span className="ms-2 text-secondary">Smart Click <SiPersonio   color='blue'/></span>
+            <span className="ms-2 text-secondary">NEXTGEN JOB PORTAL</span>
           </div>
           <div className="d-flex gap-2 justify-content-evenly align-items-center position-relative">
   {sessionStorage.getItem('token') && userName ? (
