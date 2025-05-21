@@ -34,7 +34,7 @@ const upload = multer({ storage }).single('resume');
 
 
 const sendEmails = (req, res) => {
-   isCancelled = false;
+  isCancelled = false;
   upload(req, res, async function (err) {
     if (isCancelled) {
       console.log("⛔ Process cancelled by user");
@@ -67,16 +67,12 @@ const sendEmails = (req, res) => {
       }
 
       const data = await DynamicModel.find({}).lean();
-     
 
       if (data.length === 0) {
-        return res.status(400).json({ message: "No data found in the collection"}) 
+        return res.status(400).json({ message: "No data found in the collection" });
       }
 
-       if(data){
-        return res.status(200).json({ estimatedTime:data.length * 10 });
-      }
-
+      // Initialize email sending process
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
@@ -86,14 +82,18 @@ const sendEmails = (req, res) => {
       });
 
       const filePath = path.join(__dirname, "../uploads", req.file.filename);
+      let emailsSent = 0;
+      const totalEmails = data.length;
+      // Send initial response with estimated time
+      res.status(200).json({ estimatedTime: totalEmails * 6, totalEmails: totalEmails,emailsent:emailsSent });
 
+      // Continue with email sending process
       for (const hr of data) {
-        
         if (isCancelled) {
           console.log("⛔ Process cancelled by user");
-
-          return res.status(200).json({ message: "Email sending cancelled" });
+          return;
         }
+        
 
         const personalizedTemplate = template.replace(/\[([^\]]+)\]/g, (_, key) => hr[key.trim()] || "");
 
@@ -107,21 +107,25 @@ const sendEmails = (req, res) => {
 
         try {
           await transporter.sendMail(mailOptions);
-          console.log(`✅ Email sent to ${hr.email}`);
+          emailsSent++;
+          console.log(`✅ Email sent to ${hr.email} (${emailsSent}/${totalEmails})`);
+
         } catch (emailErr) {
           console.error(`❌ Failed to send email to ${hr.email}`, emailErr);
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 sec wait
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       }
-
+     
       console.log("✅ All emails sent.");
-      return res.status(200).json({ message: "All emails sent successfully"}); // 2s per email
+      
     } catch (err) {
       console.error("Error:", err);
-      res.status(500).json({ message: "Internal error", error: err.message });
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Internal error", error: err.message });
+      }
     }
-  });
+});
 };
 
 
