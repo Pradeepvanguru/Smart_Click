@@ -43,7 +43,7 @@ const Home = () => {
   {/* Logo Section */}
   <div className="d-flex align-items-center" style={{ cursor: "pointer" }} onClick={handleBack}>
     <SiProcessingfoundation fontSize={50} color="grey" />
-    <span className="ms-2 text-secondary  fw-semibold">Smart Click</span>
+    <span className="ms-2 text-secondary  fw-semibold">NEXTGEN JOB PORTAL </span>
   </div>
 
   {/* Profile or Auth Buttons */}
@@ -112,7 +112,7 @@ const Home = () => {
   </div>
 </div>
 
-      <h4 className="email_title">Send Your Application To HR's or Referral Contacts through Smart Click <GiSteamBlast /></h4>
+      <h4 className="email_title">Send Your Email Application To HR's or Referral Contacts through Smart Click <GiSteamBlast /></h4>
       <EmailForm />
     </div>
   );
