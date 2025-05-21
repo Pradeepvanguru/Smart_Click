@@ -207,3 +207,142 @@
     opacity: 1;
   }
 }
+
+
+/* Media Queries for Mobile Compatibility */
+@media screen and (max-width: 768px) {
+  .email_form_container {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .email_form_row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .email_form_main label {
+    font-size: 14px;
+  }
+
+  .email_form_input_box input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .placeholders {
+    padding: 8px;
+  }
+
+  .placeholder-item {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  .email_form_submit_button {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+  }
+
+  .email_form_overlay_content {
+    width: 90%;
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .email_form_cancel_button {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .email_form_progress_bar_container {
+    height: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+
+  
+  .email_form_container {
+    padding: 1px;
+  }
+
+  .email_form_back_button {
+    font-size: 14px;
+  }
+
+  .email_form_main label {
+    font-size: 13px;
+  }
+
+  .email_form_input_box input {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .placeholder-item {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  .email_form_submit_button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .email_form_overlay_content {
+    padding: 15px;
+  }
+
+  .email_form_cancel_button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ck.ck-toolbar {
+    padding: 0 5px !important;
+  }
+  
+  
+  
+  .ck.ck-toolbar .ck-toolbar__items > * {
+    margin: 5px 2px !important;
+  }
+}
+
+/* CKEditor custom styles */
+.ck.ck-editor__main > .ck-editor__editable {
+  min-height: 250px !important;
+  min-width: 100% !important;
+}
+
+.ck.ck-editor {
+  width: 100% !important;
+}
+
+@media screen and (max-width: 768px) {
+  .ck.ck-editor__main > .ck-editor__editable {
+    min-height: 200px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ck.ck-editor__main > .ck-editor__editable {
+    min-height: 150px !important;
+  }
+  
+  .ck.ck-toolbar {
+    padding: 0 5px !important;
+  }
+  
+  .ck.ck-toolbar .ck-toolbar__items {
+    flex-wrap: wrap;
+  }
+  
+  .ck.ck-toolbar .ck-toolbar__items > * {
+    margin: 5px 2px !important;
+  }
+}

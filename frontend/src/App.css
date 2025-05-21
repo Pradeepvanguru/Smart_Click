@@ -25,6 +25,8 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+
+
 /* Basic Header */
 .email_title{
   font-size: 1rem;
@@ -81,8 +83,22 @@ input[type="file"]{
 
 
 button:hover {
-  background-color: #387102;
+  transform: matrix(1.02);
  
+}
+
+
+  @media screen and (max-width: 480px) {
+  .app-container {
+    padding: 4px;
+  }
+  .email_title{
+    font-size: 0.8rem;
+  }
+  .app-container span {
+    font-size: 0.8rem;
+    }
+  
 }
 
 /* Error message styling */

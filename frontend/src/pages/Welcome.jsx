@@ -212,7 +212,7 @@ const Welcome = () => {
         <div className="container-fluid">
           <div className="navbar-brand d-flex align-items-center">
             <SiProcessingfoundation fontSize={50} color="grey" />
-            <span className="ms-2 text-secondary">Smart Click <SiPersonio   color='blue'/></span>
+            <span className="ms-2 text-secondary">Smart Click <SiPersonio   color='blue' fontSize={10}/></span>
           </div>
           <div className="d-flex gap-2 justify-content-evenly align-items-center position-relative">
   {sessionStorage.getItem('token') && userName ? (
@@ -265,22 +265,24 @@ const Welcome = () => {
       )}
     </>
   ) : (
-    <>
+    <div className="login-signup">
       <button
-        style={{ fontSize: 14, fontWeight: 600, width: 100 }}
+      
         onClick={() => navigate('/login')}
         className="btn btn-outline-primary me-2"
+        id="login-button"
       >
         Login
       </button>
       <button
-        style={{ fontSize: 14, fontWeight: 600, width: 100 }}
+        
         onClick={() => navigate('/signup')}
         className="btn btn-outline-primary me-2"
+        id="signup-button"
       >
         Sign Up
       </button>
-    </>
+    </div>
   )}
 </div>
 
@@ -299,7 +301,7 @@ const Welcome = () => {
               onClick={handleSendEmails}
               disabled={!isFileUploaded}
             >
-              <GoZap color="yellow" size={23} /> Smart Click <TbPlayerTrackNextFilled fontSize={20} />
+              <GoZap color="yellow" size={33} /> Smart Click <TbPlayerTrackNextFilled fontSize={20} />
             </button>
 
             <label className={`file-upload-button ${isFileUploaded ? 'disabled' : ''}`}>
@@ -315,10 +317,10 @@ const Welcome = () => {
 
             {isFileUploaded && (
               <button
-                className="delete-button"
+                className="btn btn-outline-danger"
                 onClick={handleDeleteData}
               >
-                <MdDeleteForever size={30} />
+                <MdDeleteForever size={35} />
               </button>
             )}
           </div>

@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import Success from "./pages/Success";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/success" element={<Success />} />
           <Route path="*" element={<div className='my-5 py-5'><center><h2>404 - Page Not Found <TbNetworkOff fontSize={50} /></h2></center></div>} />
         </Routes>
       </div>
